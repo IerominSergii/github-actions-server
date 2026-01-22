@@ -7,6 +7,9 @@ const dbPassword = process.env.MONGODB_PASSWORD;
 const dbName = process.env.MONGODB_DB_NAME;
 
 const uri = `${connectionProtocol}://${dbUser}:${dbPassword}@${clusterAddress}/?appName=Cluster0`;
+
+console.log("uri:", uri);
+
 const client = new MongoClient(uri);
 
 console.log("Trying to connect to db");
