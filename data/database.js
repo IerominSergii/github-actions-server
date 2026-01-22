@@ -6,13 +6,25 @@ const dbUser = process.env.MONGODB_USERNAME;
 const dbPassword = process.env.MONGODB_PASSWORD;
 const dbName = process.env.MONGODB_DB_NAME;
 
-const uri = `${connectionProtocol}://${dbUser}:${dbPassword}@${clusterAddress}/?appName=Cluster0`;
+if (
+  !connectionProtocol ||
+  !clusterAddress ||
+  !dbUser ||
+  !dbPassword ||
+  !dbName
+) {
+  console.error("Missing required MongoDB environment variables.");
+  process.exit(1);
+}
 
-console.log("uri:", uri);
+const encodedUser = encodeURIComponent(dbUser);
+const encodedPassword = encodeURIComponent(dbPassword);
+
+const uri = `${connectionProtocol}://${encodedUser}:${encodedPassword}@${clusterAddress}/?retryWrites=true&w=majority&appName=Cluster0`;
+
+console.log("Trying to connect to db", clusterAddress);
 
 const client = new MongoClient(uri);
-
-console.log("Trying to connect to db");
 
 try {
   await client.connect();
